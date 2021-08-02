@@ -11,8 +11,8 @@ import (
 var (
 	biapiSvc = NewBiapiSvc(
 		botSvc.SpecSvc.Spec.BiapiSpec,
-		botSvc.SpecSvc.ArgsSpec.BiapiAk,
-		botSvc.SpecSvc.ArgsSpec.BiapiSk,
+		botSvc.SpecSvc.Spec.CredSpec.BiapiAk,
+		botSvc.SpecSvc.Spec.CredSpec.BiapiSk,
 	)
 )
 

@@ -17,6 +17,7 @@ type Spec struct {
 	StratSpec *StratSpec `validate:"required"  yaml:"strategy"`
 	SpotSpec  *SpotSpec  `validate:"required"  yaml:"spot"`
 	EndSpec   *EndSpec   `validate:"required"  yaml:"end"`
+	CredSpec  *CredSpec  `validate:"required"  yaml:"cred"`
 }
 
 type EmailSpec struct {
@@ -65,21 +66,20 @@ type EndSpec struct {
 	DummyOrder      []float64 `validate:"required" yaml:"dummy_order"`
 }
 
-type ArgsSpec struct {
-	BiapiAk string `validate:"required"`
-	BiapiSk string `validate:"required"`
-	TaapiSk string `validate:"required"`
-	EmUser  string `validate:"required"`
-	EmPass  string `validate:"required"`
-	NotEm   string `validate:"required"`
+type CredSpec struct {
+	BiapiAk string `validate:"required" yaml:"biapi_ak"`
+	BiapiSk string `validate:"required" yaml:"biapi_sk"`
+	TaapiSk string `validate:"required" yaml:"taapi_sk"`
+	EmUser  string `validate:"required" yaml:"em_user"`
+	EmPass  string `validate:"required" yaml:"em_pass"`
+	NotEm   string `validate:"required" yaml:"noti_em"`
 }
 
 type SpecSvc struct {
-	Spec     Spec
-	ArgsSpec ArgsSpec
+	Spec Spec
 }
 
-func NewSpec(s []byte, a ArgsSpec) (*SpecSvc, error) {
+func NewSpec(s []byte) (*SpecSvc, error) {
 	spec := Spec{}
 
 	if err := yaml.Unmarshal(s, &spec); err != nil {
@@ -88,12 +88,8 @@ func NewSpec(s []byte, a ArgsSpec) (*SpecSvc, error) {
 	if err := validator.New().Struct(&spec); err != nil {
 		return nil, err
 	}
-	if err := validator.New().Struct(&a); err != nil {
-		return nil, err
-	}
 
 	return &SpecSvc{
-		Spec:     spec,
-		ArgsSpec: a,
+		Spec: spec,
 	}, nil
 }
