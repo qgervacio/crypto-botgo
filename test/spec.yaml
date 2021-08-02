@@ -7,7 +7,7 @@ delayed: false
 spot:
   coin: DOT
   market: USDT
-  period_min: 15
+  period_min: 5
   market_precision: "%.3f"
   coin_precision: "%.3f"
   initial_market_fund: 300
@@ -25,7 +25,7 @@ strategy:
 end:
   consecutive_loss: 3
   dummy_symbol: DOGEUSDT
-  dummy_order: [ 0.1, 100, 5 ]
+  dummy_order: [ 0.1, 100, 30 ]
 
 email:
   server: smtp.gmail.com
@@ -45,3 +45,11 @@ taapi:
   exchange: binance
   chart: heikinashi
   backtrack: 1
+
+cred:
+  biapi_ak: your-secret-string
+  biapi_sk: your-secret-string
+  taapi_sk: your-secret-string
+  em_user: your-secret-string
+  em_pass: your-secret-string
+  noti_em: your-secret-string

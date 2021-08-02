@@ -5,12 +5,12 @@ name: bot01
 delayed: false
 
 spot:
-  coin: ADA
+  coin: DOT
   market: USDT
-  period_min: 15
-  market_precision: "%.4f"
-  coin_precision: "%.2f"
-  initial_market_fund: 135.333082
+  period_min: 5
+  market_precision: "%.3f"
+  coin_precision: "%.3f"
+  initial_market_fund: 300
   order_timeout_sec: 10
   slippage: 0.5
   before_slippage: 5
@@ -45,3 +45,11 @@ taapi:
   exchange: binance
   chart: heikinashi
   backtrack: 1
+
+cred:
+  biapi_ak: your-secret-string
+  biapi_sk: your-secret-string
+  taapi_sk: your-secret-string
+  em_user: your-secret-string
+  em_pass: your-secret-string
+  noti_em: your-secret-string
