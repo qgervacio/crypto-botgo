@@ -59,7 +59,7 @@ func (s *BotSvc) Run() {
 
 	ts := make(chan Signal)
 	s.trader(ns, ts)
-	s.looker(ts)
+	s.looker(ns, ts)
 }
 
 func (s *BotSvc) trader(ns chan<- []string, ts <-chan Signal) {
@@ -68,18 +68,14 @@ func (s *BotSvc) trader(ns chan<- []string, ts <-chan Signal) {
 		for {
 			symbol := fmt.Sprintf("%s%s", s.SpotSvc.SpotSpec.Coin, s.SpotSvc.SpotSpec.Market)
 			if sig == SignalBuy {
-				res, err := s.BiapiSvc.BuyMarket(
-					s.SpotSvc.SpotSpec.Coin,
-					s.SpotSvc.SpotSpec.Market, "")
+				res, err := s.SpotSvc.BuyMarket("") // all in
 				if err != nil {
 					ns <- []string{fmt.Sprintf("Failed to buy %s", symbol), err.Error()}
 				} else {
 					ns <- []string{fmt.Sprintf("Bought %s (%s)", symbol, res.Status), ""}
 				}
 			} else {
-				res, err := s.BiapiSvc.SellMarket(
-					s.SpotSvc.SpotSpec.Coin,
-					s.SpotSvc.SpotSpec.Market, "")
+				res, err := s.SpotSvc.SellMarket("") // all in
 				if err != nil {
 					ns <- []string{fmt.Sprintf("Failed to sell %s", symbol), err.Error()}
 				} else {
@@ -90,7 +86,7 @@ func (s *BotSvc) trader(ns chan<- []string, ts <-chan Signal) {
 	}()
 }
 
-func (s *BotSvc) looker(ts chan<- Signal) {
+func (s *BotSvc) looker(ns chan<- []string, ts chan<- Signal) {
 	go func() {
 		for {
 			var wg sync.WaitGroup
@@ -173,7 +169,11 @@ func (s *BotSvc) looker(ts chan<- Signal) {
 
 			position = SignalBuy
 			if position == SignalBuy || position == SignalSell {
-				ts <- position
+				if s.SpecSvc.Spec.DryRun {
+					ns <- []string{string(position), ""}
+				} else {
+					ts <- position
+				}
 			} else {
 				log.Infof("No action for now...")
 			}
