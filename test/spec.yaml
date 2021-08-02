@@ -1,0 +1,47 @@
+# Copyright (c) 2021. Quirino Gervacio
+# MIT License. All Rights Reserved
+
+name: bot01
+delayed: false
+
+spot:
+  coin: DOT
+  market: USDT
+  period_min: 15
+  market_precision: "%.3f"
+  coin_precision: "%.3f"
+  initial_market_fund: 300
+  order_timeout_sec: 10
+  slippage: 0.5
+  before_slippage: 5
+
+strategy:
+  adx: 14
+  macd: [ 14, 26, 9 ]
+  super_trend:
+    - [ 11, 2 ]
+    - [ 10, 1 ]
+
+end:
+  consecutive_loss: 3
+  dummy_symbol: DOGEUSDT
+  dummy_order: [ 0.1, 100, 5 ]
+
+email:
+  server: smtp.gmail.com
+  port: 587
+  name: crypto-botgo
+  conn_timeout_sec: 10
+  send_timeout_sec: 10
+  insecure_skip_verify: true
+
+biapi:
+  test: false
+  receive_window: 20000
+  url: https://api.binance.com
+
+taapi:
+  url: https://api.taapi.io
+  exchange: binance
+  chart: heikinashi
+  backtrack: 1

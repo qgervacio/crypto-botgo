@@ -1,0 +1,22 @@
+# Copyright (c) 2021. Quirino Gervacio
+# MIT License. All Rights Reserved
+
+version: "3"
+
+services:
+  crypto-botgo:
+    image: qgervacio/crypto-botgo:${TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      --specFile "/tmp/spec.yaml"
+      --biapiAk "${BIAPI_AK}"
+      --biapiSk "${BIAPI_SK}"
+      --taapiSk "${TAAPI_SK}"
+      --emUser "${EM_USER}"
+      --emPass "${EM_PASS}"
+      --notEm "${NOT_EM_LIST}"
+      --logLevel "debug"
+    volumes:
+      - ./test:/tmp
