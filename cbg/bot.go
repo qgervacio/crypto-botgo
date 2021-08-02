@@ -7,7 +7,6 @@ import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"os"
-	"strconv"
 	"sync"
 	"time"
 )
@@ -54,15 +53,45 @@ func (s *BotSvc) Run() {
 		s.SpecSvc.Spec.SpotSpec.PeriodMin)
 	log.Infof("Backtrack at %d", s.SpecSvc.Spec.TaapiSpec.Backtrack)
 
-	sig := make(chan []string)
-	s.notifier(sig)
-	s.ender(sig)
-	s.trader(sig)
+	ns := make(chan []string)
+	s.notifier(ns)
+	s.ender(ns)
+
+	ts := make(chan Signal)
+	s.trader(ns, ts)
+	s.looker(ts)
 }
 
-func (s *BotSvc) trader(ns chan<- []string) {
+func (s *BotSvc) trader(ns chan<- []string, ts <-chan Signal) {
 	go func() {
-		sigCount := 0
+		sig := <-ts
+		for {
+			symbol := fmt.Sprintf("%s%s", s.SpotSvc.SpotSpec.Coin, s.SpotSvc.SpotSpec.Market)
+			if sig == SignalBuy {
+				res, err := s.BiapiSvc.BuyMarket(
+					s.SpotSvc.SpotSpec.Coin,
+					s.SpotSvc.SpotSpec.Market, "")
+				if err != nil {
+					ns <- []string{fmt.Sprintf("Failed to buy %s", symbol), err.Error()}
+				} else {
+					ns <- []string{fmt.Sprintf("Bought %s (%s)", symbol, res.Status), ""}
+				}
+			} else {
+				res, err := s.BiapiSvc.SellMarket(
+					s.SpotSvc.SpotSpec.Coin,
+					s.SpotSvc.SpotSpec.Market, "")
+				if err != nil {
+					ns <- []string{fmt.Sprintf("Failed to sell %s", symbol), err.Error()}
+				} else {
+					ns <- []string{fmt.Sprintf("Sold %s (%s)", symbol, res.Status), ""}
+				}
+			}
+		}
+	}()
+}
+
+func (s *BotSvc) looker(ts chan<- Signal) {
+	go func() {
 		for {
 			var wg sync.WaitGroup
 			interval := fmt.Sprintf("%dm",
@@ -142,36 +171,11 @@ func (s *BotSvc) trader(ns chan<- []string) {
 				position = SignalHodl
 			}
 
-			sigCount++
-			log.Infof("Signal#%d - %s", sigCount, position)
-
-			price := 0.0
-			symbol := fmt.Sprintf("%s%s",
-				s.SpecSvc.Spec.SpotSpec.Coin, s.SpecSvc.Spec.SpotSpec.Market)
-			priceRaw, err := s.SpotSvc.BiapiSvc.ListPrices(symbol)
-			if err != nil {
-				log.Errorf("Failed to get price [%v]", err)
+			position = SignalBuy
+			if position == SignalBuy || position == SignalSell {
+				ts <- position
 			} else {
-				price, _ = strconv.ParseFloat(priceRaw[0].Price, 64)
-			}
-
-			sub := fmt.Sprintf("Signal#%d - %s %s %s",
-				sigCount, position, symbol,
-				fmt.Sprintf(s.SpecSvc.Spec.SpotSpec.MarketPrecision, price))
-			if position == SignalBuy {
-				msg, err := s.SpotSvc.Buy()
-				if err != nil {
-					msg = err.Error()
-				}
-				ns <- []string{sub, msg}
-			} else if position == SignalSell {
-				msg, err := s.SpotSvc.Sell()
-				if err != nil {
-					msg = err.Error()
-				}
-				ns <- []string{sub, msg}
-			} else {
-				ns <- []string{sub, "None for now"}
+				log.Infof("No action for now...")
 			}
 
 			log.Infof("Next position inquiry is %sm", t)
