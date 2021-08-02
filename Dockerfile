@@ -13,6 +13,7 @@ ENV GOPRIVATE github.com/spolarium
 WORKDIR /app
 
 COPY . ./
+RUN rm -rf ./test
 RUN go mod download -x
 RUN CGO_ENABLED=0 GOOS=linux go build main.go
 

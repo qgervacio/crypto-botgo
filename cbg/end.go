@@ -45,5 +45,6 @@ func (s *EndSvc) EndByDummyOrder() (bool, error) {
 		}
 	}
 
+	log.Debugf("No dummy order %s found", s.EndSpec.DummySymbol)
 	return false, nil
 }

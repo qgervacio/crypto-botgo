@@ -11,19 +11,18 @@ help:
 .DEFAULT_GOAL := help
 
 tag ?= latest
-export TAG=$(tag)
-export BIAPI_AK=`cat test/biapiAk.test`
-export BIAPI_SK=`cat test/biapiSk.test`
-export TAAPI_SK=`cat test/taapiSk.test`
-export EM_USER=`cat test/emUser.test`
-export EM_PASS=`cat test/emPass.test`
-export NOT_EM_LIST=`cat test/emUser.test`
 
 t: test
 test: ## (t) Test
 	@go clean -testcache
 	@go test ./... -v -coverprofile cp.out
 	@go tool cover -html=cp.out
+
+r: run
+run: ## (r) Run main.go
+	@go run main.go \
+	    --specFile test/spec.yaml \
+        --logLevel debug
 
 u: up
 up: ## (u) Run a stack for testing
@@ -39,10 +38,4 @@ build: ## (b) Build image (param: tag)
 
 p: push
 push: ## (p) Push image (param: tag)
-	@TAG=$(tag) \
-        BIAPI_AK=$(BIAPI_AK) \
-        BIAPI_SK=$(BIAPI_SK) \
-        TAAPI_SK=$(TAAPI_SK) \
-        EM_USER=$(EM_USER) \
-        EM_PASS=$(EM_PASS) \
-        NOTI_EM_LIST=$(NOTI_EM_LIST) docker-compose push
+	@TAG=$(tag) docker-compose push

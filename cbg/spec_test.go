@@ -25,16 +25,7 @@ func loadTestFile(f string) []byte {
 }
 
 func newSpecSvc() *SpecSvc {
-	s, _ := NewSpec(
-		loadTestFile("spec-test.yaml"),
-		ArgsSpec{
-			BiapiAk: string(loadTestFile("biapiAk-test.test")),
-			BiapiSk: string(loadTestFile("biapiSk-test.test")),
-			TaapiSk: string(loadTestFile("taapiSk.test")),
-			EmUser:  string(loadTestFile("emUser.test")),
-			EmPass:  string(loadTestFile("emPass.test")),
-			NotEm:   string(loadTestFile("emUser.test")),
-		})
+	s, _ := NewSpec(loadTestFile("spec-test.yaml"))
 
 	logFmt := new(log.TextFormatter)
 	logFmt.TimestampFormat = time.RFC3339

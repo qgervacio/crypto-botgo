@@ -12,7 +12,7 @@ import (
 var (
 	taapiSvc = NewTaapiSvc(
 		botSvc.SpecSvc.Spec.TaapiSpec,
-		botSvc.SpecSvc.ArgsSpec.TaapiSk,
+		botSvc.SpecSvc.Spec.CredSpec.TaapiSk,
 	)
 )
 

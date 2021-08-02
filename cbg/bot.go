@@ -23,9 +23,9 @@ type BotSvc struct {
 }
 
 func NewBotSvc(ss *SpecSvc) *BotSvc {
-	taapiSvc := NewTaapiSvc(ss.Spec.TaapiSpec, ss.ArgsSpec.TaapiSk)
-	emailSvc := NewEmailSvc(ss.Spec.EmailSpec, ss.ArgsSpec.EmUser, ss.ArgsSpec.EmPass)
-	biapiSvc := NewBiapiSvc(ss.Spec.BiapiSpec, ss.ArgsSpec.BiapiAk, ss.ArgsSpec.BiapiSk)
+	taapiSvc := NewTaapiSvc(ss.Spec.TaapiSpec, ss.Spec.CredSpec.TaapiSk)
+	emailSvc := NewEmailSvc(ss.Spec.EmailSpec, ss.Spec.CredSpec.EmUser, ss.Spec.CredSpec.EmPass)
+	biapiSvc := NewBiapiSvc(ss.Spec.BiapiSpec, ss.Spec.CredSpec.BiapiAk, ss.Spec.CredSpec.BiapiSk)
 	stratSvc := NewStratSvc(ss.Spec.StratSpec, taapiSvc)
 	spotSvc := NewSpotSvc(ss.Spec.SpotSpec, biapiSvc)
 	endSvc := NewEndSvc(ss.Spec.EndSpec, biapiSvc)
@@ -208,7 +208,7 @@ func (s *BotSvc) notifier(ns <-chan []string) {
 			log.Debugf("Notifying...")
 			if err := s.EmailSvc.Send(
 				msg[0], msg[1],
-				[]string{s.SpecSvc.ArgsSpec.NotEm},
+				[]string{s.SpecSvc.Spec.CredSpec.NotEm},
 				[]string{}, []string{}); err != nil {
 				log.Errorf("failed to send email notification [%v]", err)
 				continue

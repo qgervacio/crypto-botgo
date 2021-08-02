@@ -10,13 +10,7 @@ services:
       context: .
       dockerfile: Dockerfile
     command: >
-      --specFile "/tmp/spec.yaml"
-      --biapiAk "${BIAPI_AK}"
-      --biapiSk "${BIAPI_SK}"
-      --taapiSk "${TAAPI_SK}"
-      --emUser "${EM_USER}"
-      --emPass "${EM_PASS}"
-      --notEm "${NOT_EM_LIST}"
-      --logLevel "debug"
+      --specFile /tmp/spec.yaml
+      --logLevel debug
     volumes:
       - ./test:/tmp

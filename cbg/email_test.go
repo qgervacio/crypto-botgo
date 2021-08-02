@@ -11,8 +11,8 @@ import (
 var (
 	emailSvc = NewEmailSvc(
 		botSvc.SpecSvc.Spec.EmailSpec,
-		botSvc.SpecSvc.ArgsSpec.EmUser,
-		botSvc.SpecSvc.ArgsSpec.EmPass,
+		botSvc.SpecSvc.Spec.CredSpec.EmUser,
+		botSvc.SpecSvc.Spec.CredSpec.EmPass,
 	)
 )
 
@@ -24,7 +24,7 @@ func Test_Email_Send_When_Ok_Then_Pass(t *testing.T) {
 	err := emailSvc.Send(
 		"crypto-botgo test",
 		"email_test",
-		[]string{string(loadTestFile("emUser.test"))},
+		[]string{botSvc.SpecSvc.Spec.CredSpec.NotEm},
 		[]string{},
 		[]string{},
 	)
