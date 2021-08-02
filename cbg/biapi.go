@@ -51,38 +51,22 @@ func (s *BiapiSvc) GetAccount() (*b.Account, error) {
 }
 
 func (s *BiapiSvc) BuyMarket(coin, market, quantity string) (*b.CreateOrderResponse, error) {
-	q := quantity
-	if quantity == "" {
-		balance, err := s.GetBalance(market)
-		if err != nil {
-			return nil, err
-		}
-		q = balance
-	}
 	return s.Client.
 		NewCreateOrderService().
 		Symbol(fmt.Sprintf("%s%s", coin, market)).
 		Side(b.SideTypeBuy).
 		Type(b.OrderTypeMarket).
-		QuoteOrderQty(q).
+		QuoteOrderQty(quantity).
 		Do(context.Background(), b.WithRecvWindow(s.BiapiConf.RecvWindow))
 }
 
 func (s *BiapiSvc) SellMarket(coin, market, quantity string) (*b.CreateOrderResponse, error) {
-	q := quantity
-	if quantity == "" {
-		balance, err := s.GetBalance(coin)
-		if err != nil {
-			return nil, err
-		}
-		q = balance
-	}
 	return s.Client.
 		NewCreateOrderService().
 		Symbol(fmt.Sprintf("%s%s", coin, market)).
 		Side(b.SideTypeSell).
 		Type(b.OrderTypeMarket).
-		Quantity(q).
+		Quantity(quantity).
 		Do(context.Background(), b.WithRecvWindow(s.BiapiConf.RecvWindow))
 }
 

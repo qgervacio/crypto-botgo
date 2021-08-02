@@ -27,12 +27,11 @@ func Test_Biapi_GetBalance_When_Ok_Then_Pass(t *testing.T) {
 }
 
 func Test_Biapi_BuySellMarket_When_Ok_Then_Pass(t *testing.T) {
-	r, err := biapiSvc.BuyMarket("BTC", "USDT", "")
+	r, err := biapiSvc.BuyMarket("BTC", "USDT", "1")
 	assert.Nil(t, err)
 	assert.NotNil(t, "", r)
 
-	r, err = biapiSvc.SellMarket("BTC", "USDT", "")
+	r, err = biapiSvc.SellMarket("BTC", "USDT", "1")
 	assert.Nil(t, err)
 	assert.NotNil(t, "", r)
 }
-
