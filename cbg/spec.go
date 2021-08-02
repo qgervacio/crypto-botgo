@@ -11,6 +11,7 @@ import (
 type Spec struct {
 	Name      string     `validate:"required" yaml:"name"`
 	Delayed   bool       `yaml:"delayed"`
+	DryRun    bool       `yaml:"dry_run"`
 	EmailSpec *EmailSpec `validate:"required"  yaml:"email"`
 	BiapiSpec *BiapiSpec `validate:"required"  yaml:"biapi"`
 	TaapiSpec *TaapiSpec `validate:"required"  yaml:"taapi"`
@@ -49,15 +50,11 @@ type StratSpec struct {
 }
 
 type SpotSpec struct {
-	Coin              string  `validate:"required" yaml:"coin"`
-	Market            string  `validate:"required" yaml:"market"`
-	PeriodMin         int     `validate:"required" yaml:"period_min"`
-	CoinPrecision     string  `validate:"required" yaml:"coin_precision"`
-	MarketPrecision   string  `validate:"required" yaml:"market_precision"`
-	InitialMarketFund float64 `validate:"required" yaml:"initial_market_fund"`
-	OrderTimeoutSec   int     `validate:"required" yaml:"order_timeout_sec"`
-	Slippage          float64 `validate:"required" yaml:"slippage"`
-	BeforeSlippage    int     `validate:"required" yaml:"before_slippage"`
+	Coin            string `validate:"required" yaml:"coin"`
+	Market          string `validate:"required" yaml:"market"`
+	PeriodMin       int    `validate:"required" yaml:"period_min"`
+	CoinPrecision   string `validate:"required" yaml:"coin_precision"`
+	MarketPrecision string `validate:"required" yaml:"market_precision"`
 }
 
 type EndSpec struct {
