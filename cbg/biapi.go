@@ -50,7 +50,7 @@ func (s *BiapiSvc) GetAccount() (*b.Account, error) {
 		Do(context.Background(), b.WithRecvWindow(s.BiapiConf.RecvWindow))
 }
 
-func (s *BiapiSvc) BuyMarket(coin, market, quantity string) (*b.CreateOrderResponse, error) {
+func (s *BiapiSvc) BuyMarketMT(coin, market, quantity string) (*b.CreateOrderResponse, error) {
 	return s.Client.
 		NewCreateOrderService().
 		Symbol(fmt.Sprintf("%s%s", coin, market)).
@@ -60,7 +60,7 @@ func (s *BiapiSvc) BuyMarket(coin, market, quantity string) (*b.CreateOrderRespo
 		Do(context.Background(), b.WithRecvWindow(s.BiapiConf.RecvWindow))
 }
 
-func (s *BiapiSvc) SellMarket(coin, market, quantity string) (*b.CreateOrderResponse, error) {
+func (s *BiapiSvc) SellCoinMT(coin, market, quantity string) (*b.CreateOrderResponse, error) {
 	return s.Client.
 		NewCreateOrderService().
 		Symbol(fmt.Sprintf("%s%s", coin, market)).
