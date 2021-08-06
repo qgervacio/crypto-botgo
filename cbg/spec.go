@@ -58,7 +58,6 @@ type SpotSpec struct {
 }
 
 type EndSpec struct {
-	ConsecutiveLoss int       `validate:"required" yaml:"consecutive_loss"`
 	DummySymbol     string    `validate:"required" yaml:"dummy_symbol"`
 	DummyOrder      []float64 `validate:"required" yaml:"dummy_order"`
 }
