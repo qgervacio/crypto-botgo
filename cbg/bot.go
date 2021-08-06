@@ -68,14 +68,14 @@ func (s *BotSvc) trader(ns chan<- []string, ts <-chan Signal) {
 		for {
 			symbol := fmt.Sprintf("%s%s", s.SpotSvc.SpotSpec.Coin, s.SpotSvc.SpotSpec.Market)
 			if sig == SignalBuy {
-				res, err := s.SpotSvc.BuyMarket("") // all in
+				res, err := s.SpotSvc.BuyMarketMT("") // all in
 				if err != nil {
 					ns <- []string{fmt.Sprintf("Failed to buy %s", symbol), err.Error()}
 				} else {
 					ns <- []string{fmt.Sprintf("Bought %s (%s)", symbol, res.Status), ""}
 				}
 			} else {
-				res, err := s.SpotSvc.SellMarket("") // all in
+				res, err := s.SpotSvc.SellCoinMT("") // all in
 				if err != nil {
 					ns <- []string{fmt.Sprintf("Failed to sell %s", symbol), err.Error()}
 				} else {
